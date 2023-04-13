@@ -1,0 +1,18 @@
+#!/bin/sh
+#===========>>
+# 
+# A script for setting bspwm gaps
+#
+# Dependencis: my "bspsize" script
+#
+#===========>>
+
+[ $1 = "0" ] && $($(grep window_gap $(whereis bspsize | cut -d " " -f 2)))
+
+[ -z $1 ] && echo "Error: No arguments" && exit 1
+
+current=$(bspc config window_gap)
+
+bspc config window_gap $(($current+($1)))
+
+

@@ -1,0 +1,42 @@
+#!/bin/bash
+
+#
+# This is a script to create a scratchpad window in bspwm. I use alacritty to emulate terminals, so this script will require some changes if you want to use this with a different terminal emulator. 
+#
+# Dependencies: xwininfo, xargs, alacritty, xdo
+
+W=2200 		# wanted window width
+H=1300		# wanted window height
+scr_W=3000 	# screen width
+scr_H=2000 	# screen height
+
+# Kills main-scp 
+xwininfo -tree -root | grep main-scp | awk '{print $1}' | xargs xkill -id 
+
+
+# Spawn window and get node id
+alacritty -t "main-scp" --hold & disown
+sleep 0.7
+nid=$(echo $(xwininfo -tree -root | grep "main-scp" | head -n 1) | cut -d ' ' -f 1)
+bspc node $nid -t floating
+
+
+# Move to top mid
+xdo activate $nid
+xdo move -x $(((scr_W/2)-(W/2))) -y 0
+
+
+# Set correct width and height
+size=$(echo $(xwininfo -tree -root | grep "main-scp" | head -n 1) | cut -d ' ' -f 5)
+win_W=$(echo $size | sed 's/x.*//')
+win_H=$(echo $size | sed 's/.*x//; s/\+.*//')
+
+bspc node $nid -z right $(($W-$win_W)) 0
+bspc node $nid -z bottom 0 $(($H-$win_H))
+
+bspc node $nid --flag hidden=on
+
+echo $nid > ~/.config/bspwm/main-scp-id
+echo 0 > ~/.config/bspwm/main-scp-shown
+
+echo $nid >> ~/.config/bspwm/bspwm-AOS

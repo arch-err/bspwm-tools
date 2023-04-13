@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# This is a short script to switch workspaces in bspwm and bring every window defined in the file bspwm-AOS (Always On Screen) to the workspace.
+#
+
+f=~/.config/bspwm/bspwm-AOS
+
+for node in $(cat $f) 
+do
+	bspc node $node --to-desktop $1
+	
+done
+
+bspc desktop -f $1
+
+if ! bspc query -D -d .occupied | grep $(bspc query -D --desktop $1) 1>/dev/null; then
+	$2	
+fi
+

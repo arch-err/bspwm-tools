@@ -1,0 +1,22 @@
+#!/bin/bash
+# 
+# This is a helper script to hide/unhide the scratchpad that "init-scp" creates. 
+# 
+# Dependencies: xdo
+#
+# Disclaimer: make sure all of the files and folders this script reads and writes to exists and are readable and writable.
+#
+
+
+nid=$(cat ~/.config/bspwm/main-scp-id)
+
+if [[ $(toggle-state ~/.config/bspwm/main-scp-shown) == "1" ]]
+then
+	bspc node $nid --flag hidden=off
+	xdo activate $nid
+	exit 0
+fi
+
+bspc node $nid --flag hidden=on
+exit 0
+

@@ -1,0 +1,57 @@
+#!/bin/sh
+#===========>>
+# 
+# Small script to make window floating and move it to a corner
+#
+# Dependencies: xwininfo, xdotool, xdo
+#
+#===========>>
+#
+#
+offset=60
+
+screen_W=3000
+screen_H=2000
+
+# Get window id
+id=$(xwininfo | grep "Window id" | cut -d ' ' -f 4 & sleep 0.01 && xdotool click 1)
+
+# Make the window floating
+xdo activate $id
+bspc node focused -t floating
+
+# Get window size
+size=$(xwininfo -tree -root | grep $id | sed 's/.*) //' | sed 's/+.*//')
+
+# Set X and Y coordinates based on the arguments
+case $1 in 
+	# Top Left
+	1) 
+		x=$((screen_W-$(echo $size | sed 's/x.*//')))
+		y=$offset
+		;;
+	# Top Right
+	2)
+		x=0
+		y=$offset
+		;;
+	# Bottom Left
+	3)
+		x=$((screen_W-$(echo $size | sed 's/x.*//')))
+		y=$((screen_H-$(echo $size | sed 's/.*x//')-$offset))
+		;;
+	# Bottom Right
+	4)
+		x=0
+		y=$((screen_H-$(echo $size | sed 's/.*x//')-$offset))
+		;;
+esac
+
+
+# Move the window
+xdo activate $id
+xdo move -x $x -y $y
+xdotool mousemove $(($x+30)) $(($y+30))
+
+
+

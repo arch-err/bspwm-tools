@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# This is a separation from my bspwmrc file, to load paddings and gaps separate from the rest of the config.
+#
+
+bspc config window_gap 0           
+
+# This block can be omitted if you're not using my polybar toggle scripts
+if [[ $(cat ~/.config/polybar/polybar_shown) == "0" ]]
+then
+	bspc config top_padding 0
+	bspc config bottom_padding 0
+	bspc config left_padding 0
+	bspc config right_padding 0
+	exit 0
+fi
+
+bspc config top_padding 60
+bspc config bottom_padding 60
+bspc config left_padding 0
+bspc config right_padding 0
+
+

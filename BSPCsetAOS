@@ -1,0 +1,20 @@
+#!/bin/bash
+# 
+# bspwm-AOS is a script to save the window id of the current active window in a file. Paired with my script "ws-open" you can set windows to move with you between workspaces in bspwmm.
+# 
+# Dependencies: xwininfo, xdotool
+# 
+
+
+
+f=~/.config/bspwm/bspwm-AOS
+
+id=$(xwininfo | grep "Window id" | cut -d ' ' -f 4 & sleep 0.01 && xdotool click 1)
+
+
+if [[ $(grep $id ~/.config/bspwm/bspwm-AOS) == "" ]]
+then
+	echo $id >> ~/.config/bspwm/bspwm-AOS
+else
+	cat $f | perl -pe "s/$id//" > $f
+fi
